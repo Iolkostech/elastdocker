@@ -1,15 +1,19 @@
 <p align="center">
-<img width="680px" src="https://user-images.githubusercontent.com/16992394/65840473-f70ca780-e319-11e9-9245-29ec0a8948d6.png">
+<img width="500px" src="https://user-images.githubusercontent.com/16992394/147855783-07b747f3-d033-476f-9e06-96a4a88a54c6.png">
 </p>
-<h2 align="center">Elastic Stack on Docker with Preconfigured Security, Tools, Self-Monitoring, and Prometheus Metrics Exporters</h2>
-<h4 align="center">With tools like Curator, Rubban, ElastAlert for Alerting.</h4>
+<h2 align="center"><b>Elast</b>ic Stack on <b>Docker</b></h2>
+<h3 align="center">Preconfigured Security, Tools, and Self-Monitoring</h3>
+<h4 align="center">Configured to be ready to be used for Log, Metrics, APM, Alerting, Machine Learning, and Security (SIEM) usecases.</h4>
 <p align="center">
    <a>
       <img src="https://img.shields.io/badge/Elastic%20Stack-7.16.2-blue?style=flat&logo=elasticsearch" alt="Elastic Stack Version 7^^">
    </a>
    <a>
       <img src="https://img.shields.io/github/v/tag/sherifabdlnaby/elastdocker?label=release&amp;sort=semver">
-    </a>
+   </a>
+   <a>
+      <img src="https://img.shields.io/badge/Log4Shell-mitigated-brightgreen?style=flat&logo=java">
+   </a>
    <a>
       <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" alt="contributions welcome">
    </a>
@@ -27,6 +31,8 @@
 # Introduction
 Elastic Stack (**ELK**) Docker Composition, preconfigured with **Security**, **Monitoring**, and **Tools**; Up with a Single Command.
 
+Suitable for Demoing, MVPs and small production deployments.
+
 Based on [Official Elastic Docker Images](https://www.docker.elastic.co/)
 
 Stack Version: [7.16.2](https://www.elastic.co/blog/elastic-stack-7-16-2-released)
@@ -37,15 +43,14 @@ Stack Version: [7.16.2](https://www.elastic.co/blog/elastic-stack-7-16-2-release
 - Configured as Production Single Node Cluster. (With a multi-node cluster option for experimenting).
 - Deployed on a Single Docker Host or a Docker Swarm Cluster.
 - Security Enabled (under basic license).
-- SSL Enabled for Transport Layer and Kibana.
+- SSL Enabled (enables Alerting, SIEM, and ML features).
 - Use Docker-Compose and `.env` to configure your entire stack parameters.
 - Persist Elasticsearch's Keystore and SSL Certifications.
 - Self-Monitoring Metrics Enabled.
 - Prometheus Exporters for Stack Metrics.
 - Embedded Container Healthchecks for Stack Images.
-- [ElastAlert](https://github.com/Yelp/elastalert) preconfigured for Alerting.
-- [Curator](https://github.com/elastic/curator) with Crond preconfigured for Automated Scheduled tasks (e.g Snapshots to S3).
 - [Rubban](https://github.com/sherifabdlnaby/rubban) for Kibana curating tasks.
+- A command to ship your host Docker Images to the ELK.
 
 #### More points
 And comparing Elastdocker and the popular [deviantony/docker-elk](https://github.com/deviantony/docker-elk)
@@ -111,7 +116,7 @@ Elastdocker differs from `deviantony/docker-elk` in the following points.
     > - Notice that Kibana is configured to use HTTPS, so you'll need to write `https://` before `localhost:5601` in the browser.
     > - Modify `.env` file for your needs, most importantly `ELASTIC_PASSWORD` that setup your superuser `elastic`'s password, `ELASTICSEARCH_HEAP` & `LOGSTASH_HEAP` for Elasticsearch & Logstash Heap Size.
 
-Whatever your Host (e.g AWS EC2, Azure, DigitalOcean, or on-premise server), once you expose your host to the network, ELK component will be accessible on their respective ports.
+Whatever your Host (e.g AWS EC2, Azure, DigitalOcean, or on-premise server), once you expose your host to the network, ELK component will be accessible on their respective ports. Since the enabled TLS uses a self-signed certificate, it is recommended to SSL-Terminate public traffic using your signed certificates. 
 
 ### Docker Swarm Support
 
@@ -138,9 +143,13 @@ Elastdocker should be used for small production workloads enough to fit on a sin
 ```shell
 $ make monitoring
 ```
-#### To Start Tools (ElastAlert, Rubban, and Curator)
+#### To Start Tools
 ```shell
 $ make tools
+```
+#### To Ship Docker Container Logs to ELK 
+```shell
+$ make collect-docker-logs
 ```
 #### To Start **Elastic Stack, Tools and Monitoring**
 ```
@@ -179,9 +188,6 @@ $ make prune
 * Logstash Configuration in `logstash.yml` at `./elasticsearch/config/logstash.yml`.
 * Logstash Pipeline in `main.conf` at `./elasticsearch/pipeline/main.conf`.
 * Kibana Configuration in `kibana.yml` at `./kibana/config`.
-* ElastAlert Configuration in `./tools/elastalert/config`.
-* ElastAlert Alert rules in `./tools/elastalert/rules`, [head to ElastAlert docs to lookup how to create alerts.](https://elastalert.readthedocs.io/en/latest/elastalert.html)
-* Curator Actions at `./tools/curator/actions` and `./tools/curator/crontab`.
 * Rubban Configuration using Docker-Compose passed Environment Variables.
 
 ### Setting Up Keystore
